@@ -8,4 +8,7 @@ eks-deploy:
 	aws eks update-kubeconfig --name dev
 	helm upgrade -i frontend helm -f helm/values/frontend.yml --set image_tag=$(image_tag)
 
+argocd-deploy:
+	argocd login $(argocd_server) --insecure --username admin --password $(argocd_admin_password)
+	argocd app create frontend --sync-policy manual --repo https://github.com/raghudevopsb88/wmp-helm-v1.git --path . --dest-server https://kubernetes.default.svc   --dest-namespace default --helm-set-string image_tag=$(image_tag) --values values/frontend.yml
 
